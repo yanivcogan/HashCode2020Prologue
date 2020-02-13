@@ -1,13 +1,23 @@
+from typing import List
+import time
 import numpy as np
+import random
+
+
 class Pizza:
     def __init__(self, index, size):
         self.index = index
         self.size = size
 
+
+# OPENED_FILE = "./e_also_big.in"
+OPENED_FILE = "./b_small.in"
+
+
 def main():
-    data = './e_also_big.in'
-    with open(data, 'r') as f:
-        lines = f.readlines()
+    data = OPENED_FILE
+    with open(data) as file:
+        lines = file.readlines()
     first_line_parts = lines[0].split(' ')
     slices_to_order = int(first_line_parts[0])
     pizza_types = int(first_line_parts[1])
@@ -17,9 +27,10 @@ def main():
         pizzas.append(Pizza(i, pizza))
     fully_randomized(pizzas.copy())
 
+
 def fully_randomized(slices_to_order, pizzas):
     current_size = 0
-    
+
     while current_size<slices_to_order:
         pizza = random.choice(pizzas)
         if pizza + current_size <= slices_to_order:
