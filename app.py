@@ -9,10 +9,12 @@ class Pizza:
         self.index = index
         self.size = size
 
-
+#OPENED_FILE = "./a_example.in"
+#OPENED_FILE = "./b_small.in"
+#OPENED_FILE = "./c_medium.in"
+OPENED_FILE = "./d_quite_big.in"
 # OPENED_FILE = "./e_also_big.in"
-OPENED_FILE = "./b_small.in"
-
+all_files = ["./a_example.in", "./b_small.in", "./c_medium.in", "./d_quite_big.in", "./e_also_big.in"]
 
 def main():
     data = OPENED_FILE
