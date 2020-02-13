@@ -50,6 +50,28 @@ def fully_randomized(slices_to_order, pizzas):
     return chosen_indices
 
 
+def throw_stuff_in_then_pull_stuff_out(target: int, pizzas: List[Pizza]):
+    best_solution = [0, set()]  # slice count, taken pizza indices
+    current_solution = [0, set()]
+    attempts = 0
+    while attempts < 100_000:
+        random_pizza: Pizza = random.choice(pizzas)
+        together = current_solution[0] + random_pizza.size
+        if together > target or random_pizza in current_solution[1]:
+            attempts += 1
+            if random.random() < 0.1:  # 10% chance
+                # take out an existing pizza
+                existing_pizza: Pizza = random.choice(current_solution[1])
+                current_solution[1].remove(existing_pizza)
+                current_solution[0] -= existing_pizza.size
+            continue
+        current_solution[0] = together
+        current_solution[1].add(random_pizza)
+        if current_solution[0] > best_solution[0]:
+            best_solution = current_solution
+    return best_solution
+
+
 def write_output(output_name, pizzas):
     with open(output_name, 'w') as f:
         f.write(str(len(pizzas)) + '\n')
