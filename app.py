@@ -14,7 +14,7 @@ class Pizza:
 #OPENED_FILE = "./c_medium.in"
 OPENED_FILE = "./d_quite_big.in"
 # OPENED_FILE = "./e_also_big.in"
-all_files = ["./a_example.in", "./b_small.in", "./c_medium.in", "./d_quite_big.in", "./e_also_big.in"]
+ALL_FILES = ["./a_example.in", "./b_small.in", "./c_medium.in", "./d_quite_big.in", "./e_also_big.in"]
 
 def main():
     data = OPENED_FILE
