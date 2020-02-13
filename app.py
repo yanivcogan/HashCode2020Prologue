@@ -1,11 +1,10 @@
 import numpy as np
-
 class Pizza:
     def __init__(self, index, size):
         self.index = index
         self.size = size
 
-if __name__ == '__main__':
+def main():
     data = './e_also_big.in'
     with open(data, 'r') as f:
         lines = f.readlines()
@@ -35,7 +34,12 @@ def fully_randomized(slices_to_order, pizzas):
             used_pizzas.add(pizza)
     return used_pizzas
 
+
 def write_output(output_name, pizzas):
     with open(output_name, 'w') as f:
         f.write(len(pizzas))
         f.write(str.join(' ', pizzas))
+
+
+if __name__ == '__main__':
+    main()
