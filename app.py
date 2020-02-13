@@ -9,12 +9,15 @@ class Pizza:
         self.index = index
         self.size = size
 
-#OPENED_FILE = "./a_example.in"
-#OPENED_FILE = "./b_small.in"
-#OPENED_FILE = "./c_medium.in"
+
+# OPENED_FILE = "./a_example.in"
+# OPENED_FILE = "./b_small.in"
+# OPENED_FILE = "./c_medium.in"
 OPENED_FILE = "./d_quite_big.in"
 # OPENED_FILE = "./e_also_big.in"
-ALL_FILES = ["./a_example.in", "./b_small.in", "./c_medium.in", "./d_quite_big.in", "./e_also_big.in"]
+ALL_FILES = ["./a_example.in", "./b_small.in", "./c_medium.in", "./d_quite_big.in",
+             "./e_also_big.in"]
+
 
 def main():
     data = OPENED_FILE
@@ -29,6 +32,7 @@ def main():
         pizzas.append(Pizza(i, pizza))
     #chosen_indices, current_size = fully_randomized(slices_to_order, pizzas.copy())
     chosen_indices, current_size = retrying_randomized(slices_to_order, pizzas.copy())
+    #chosen_indices = throw_stuff_in_then_pull_stuff_out(slices_to_order, pizzas.copy())
     write_output('./outputs' + data + '.out', chosen_indices)
 
 def retrying_randomized(slices_to_order, pizzas, iterations = 1000):
@@ -59,6 +63,29 @@ def fully_randomized(slices_to_order, pizzas):
             current_size += pizza.size
             chosen_indices.append(pizza.index)
     return chosen_indices, current_size
+
+
+def throw_stuff_in_then_pull_stuff_out(target: int, pizzas: List[Pizza]):
+    best_solution = [0, set()]  # slice count, taken pizza indices
+    current_solution = [0, set()]
+    attempts = 0
+    while attempts < 100_000:
+        random_pizza: Pizza = random.choice(pizzas)
+        together = current_solution[0] + random_pizza.size
+        if together > target or random_pizza in current_solution[1]:
+            attempts += 1
+            if random.random() < 0.1:  # 10% chance
+                # take out an existing pizza
+                existing_pizza: Pizza = random.choice(tuple(current_solution[1]))
+                current_solution[1].remove(existing_pizza)
+                current_solution[0] -= existing_pizza.size
+            continue
+        current_solution[0] = together
+        current_solution[1].add(random_pizza)
+        if current_solution[0] > best_solution[0]:
+            best_solution = current_solution
+    print(f"got: {best_solution[0]}")
+    return [p.index for p in best_solution[1]]
 
 
 def write_output(output_name, pizzas):
