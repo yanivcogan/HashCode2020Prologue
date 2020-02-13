@@ -1,3 +1,4 @@
+import math
 from typing import List
 import time
 import numpy as np
@@ -32,6 +33,7 @@ def main():
         pizzas.append(Pizza(i, pizza))
     #chosen_indices, current_size = fully_randomized(slices_to_order, pizzas.copy())
     chosen_indices, current_size = retrying_randomized(slices_to_order, pizzas.copy())
+    print(current_size)
     #chosen_indices = throw_stuff_in_then_pull_stuff_out(slices_to_order, pizzas.copy())
     write_output('./outputs' + data + '.out', chosen_indices)
 
@@ -46,15 +48,18 @@ def retrying_randomized(slices_to_order, pizzas, iterations = 1000):
     return best_indices, best_size
 
 
-def fully_randomized(slices_to_order, pizzas):
+def fully_randomized(slices_to_order, orig_pizzas):
     current_size = 0
     chosen_indices = []
+    weights = [p.size for p in orig_pizzas]
+    pizzas = orig_pizzas.copy()
     while current_size < slices_to_order:
-        pizza = random.choice(pizzas)
+        i, pizza = random.choices(list(enumerate(pizzas)), weights=weights, k=1)[0]
         if pizza.size + current_size <= slices_to_order:
             current_size += pizza.size
             chosen_indices.append(pizza.index)
-            pizzas.remove(pizza)
+            pizzas.pop(i)
+            weights.pop(i)
         else:
             break
     sorted_pizzas = sorted(pizzas, key=lambda x: x.size)
@@ -66,15 +71,16 @@ def fully_randomized(slices_to_order, pizzas):
 
 
 def throw_stuff_in_then_pull_stuff_out(target: int, pizzas: List[Pizza]):
+    sorted_pizzas = sorted(pizzas, key=lambda x: x.size)
     best_solution = [0, set()]  # slice count, taken pizza indices
     current_solution = [0, set()]
     attempts = 0
     while attempts < 100_000:
-        random_pizza: Pizza = random.choice(pizzas)
+        random_pizza: Pizza = random.choice(sorted_pizzas)
         together = current_solution[0] + random_pizza.size
         if together > target or random_pizza in current_solution[1]:
             attempts += 1
-            if random.random() < 0.1:  # 10% chance
+            if random.random() < 0.001:  # 10% chance
                 # take out an existing pizza
                 existing_pizza: Pizza = random.choice(tuple(current_solution[1]))
                 current_solution[1].remove(existing_pizza)
