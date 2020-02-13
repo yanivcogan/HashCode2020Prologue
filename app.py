@@ -1,8 +1,11 @@
 import numpy as np
+import random
+
 class Pizza:
     def __init__(self, index, size):
         self.index = index
         self.size = size
+
 
 def main():
     data = './e_also_big.in'
@@ -15,30 +18,33 @@ def main():
     pizzas = []
     for i, pizza in enumerate(pizza_sizes):
         pizzas.append(Pizza(i, pizza))
-    fully_randomized(pizzas.copy())
+    chosen_indices = fully_randomized(slices_to_order, pizzas.copy())
+    write_output('./outputs' + data + '.out', chosen_indices)
+
 
 def fully_randomized(slices_to_order, pizzas):
     current_size = 0
-    
-    while current_size<slices_to_order:
+    chosen_indices = []
+    while current_size < slices_to_order:
         pizza = random.choice(pizzas)
-        if pizza + current_size <= slices_to_order:
-            current_size += pizza
-            sorted_sizes.remove(pizza)
-            used_pizzas.add(pizza)
+        if pizza.size + current_size <= slices_to_order:
+            current_size += pizza.size
+            chosen_indices.append(pizza.index)
+            pizzas.remove(pizza)
         else:
             break
-    for pizza in sorted_sizes:
-        if current_size + pizza <= slices_to_order:
-            current_size += pizza
-            used_pizzas.add(pizza)
-    return used_pizzas
+    sorted_pizzas = sorted(pizzas, key=lambda x: x.size)
+    for pizza in sorted_pizzas:
+        if current_size + pizza.size <= slices_to_order:
+            current_size += pizza.size
+            chosen_indices.append(pizza.index)
+    return chosen_indices
 
 
 def write_output(output_name, pizzas):
     with open(output_name, 'w') as f:
-        f.write(len(pizzas))
-        f.write(str.join(' ', pizzas))
+        f.write(str(len(pizzas)) + '\n')
+        f.write(str.join(' ', [str(pizza) for pizza in pizzas]))
 
 
 if __name__ == '__main__':
